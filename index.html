@@ -1870,6 +1870,7 @@ function launchMinesweeper(wrap){
       cell.oncontextmenu=e=>{e.preventDefault();toggleFlag(r,c);};
       boardEl.appendChild(cell);
     }
+     
   }
   function clickCell(r,c){
     if(gameOver||flagged[r][c])return;
