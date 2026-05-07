@@ -1441,64 +1441,217 @@ function drawWpm(){
 tyReset();
 
 // ============ AI ============
-let GEMINI_API_KEY="AIzaSyBNe-F346ZD1zXGOL0TlhBo6BVXSZ1wd00";
-let aiHist=[],aiIsLoading=false;
-async function fetchGeminiModels(){
-  if(!GEMINI_API_KEY)return;
-  const select=document.getElementById('aiModel');
-  select.innerHTML='<option></option>';
-  try{
-    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`);
-    const data=await resp.json();
-    if(data.models){
-      select.innerHTML='';
-      const valid=data.models.filter(m=>m.supportedGenerationMethods.includes("generateContent")&&!m.name.includes("vision"));
-      valid.forEach(m=>{const opt=document.createElement('option');opt.value=m.name;opt.innerText=m.displayName;select.appendChild(opt);});
-      const flash=[...select.options].find(o=>o.value.includes('1.5-flash'));if(flash)flash.selected=true;
-      toast("Modèles synchronisés !");
-    }
-  }catch(e){select.innerHTML='<option value="models/gemini-pro">Gemini Pro</option>';}
-}
-async function aiSend(){
-  const inp=document.getElementById('aiIn');
-  const txt=inp.value.trim();
-  if(!txt||aiIsLoading)return;
-  if(txt.toLowerCase().startsWith('/img ')){
-    const p=txt.replace('/img ','').trim();
-    addAmsg('user',txt);inp.value='';aiIsLoading=true;
-    const ld=addAmsg('ai loading','<div class="spinner"></div><span style="margin-left:10px"></span>');
-    const url=`https://image.pollinations.ai/prompt/${encodeURIComponent(p)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random()*1000)}`;
-    const img=new Image();img.src=url;
-    img.onload=()=>{ld.classList.remove('loading');ld.innerHTML=`<img src="${url}" style="width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.1)"><p style="font-size:.7rem;opacity:.6;margin-top:5px">✨ ${p}</p>`;};
-    img.onerror=()=>{ld.innerHTML='❌ Erreur génération image.';};
-    aiIsLoading=false;return;
-  }
-  if(!GEMINI_API_KEY){const k=prompt("Clé API Google Gemini :");if(k){GEMINI_API_KEY=k;fetchGeminiModels();}else return;}
-  addAmsg('user',txt);inp.value='';aiIsLoading=true;
-  const ld=addAmsg('ai loading','<div class="spinner"></div>');
-  try{
-    const modelId=document.getElementById('aiModel').value;
-    const url=`https://generativelanguage.googleapis.com/v1beta/${modelId}:generateContent?key=${GEMINI_API_KEY}`;
-    const contents=[...aiHist,{role:"user",parts:[{text:txt}]}];
-    const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents})});
-    const data=await response.json();
-    if(data.candidates&&data.candidates[0].content){
-      const aiText=data.candidates[0].content.parts[0].text;
-      aiHist.push({role:"user",parts:[{text:txt}]});aiHist.push({role:"model",parts:[{text:aiText}]});
-      ld.classList.remove('loading');
-      ld.innerHTML=aiText.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>').replace(/`([^`]+)`/g,'<code style="background:rgba(0,0,0,0.3);padding:2px 4px;border-radius:4px">$1</code>');
-    }else{throw new Error(data.error?.message||"Réponse vide");}
-  }catch(e){ld.classList.remove('loading');ld.innerHTML=`<span style="color:#ff6b6b">❌ ${e.message}</span>`;}
-  finally{aiIsLoading=false;const cont=document.getElementById('aiMsgs');cont.scrollTop=cont.scrollHeight;}
-}
-function addAmsg(role,content){
-  const cont=document.getElementById('aiMsgs');
-  const div=document.createElement('div');div.className=`amsg ${role}`;div.innerHTML=content;
-  cont.appendChild(div);cont.scrollTop=cont.scrollHeight;return div;
-}
-function aiPre(t){document.getElementById('aiIn').value=t;document.getElementById('aiIn').focus();}
-function aiKd(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();aiSend();}}
+let aiHist = [];
+let aiIsLoading = false;
 
+async function aiSend() {
+
+  const inp = document.getElementById('aiIn');
+  const txt = inp.value.trim();
+
+  if (!txt || aiIsLoading) return;
+
+  if (txt.toLowerCase().startsWith('/img ')) {
+
+    const p = txt.replace('/img ', '').trim();
+
+    addAmsg('user', txt);
+
+    inp.value = '';
+
+    aiIsLoading = true;
+
+    const ld = addAmsg(
+      'ai loading',
+      '<div class="spinner"></div><span style="margin-left:10px"></span>'
+    );
+
+    const url =
+      `https://image.pollinations.ai/prompt/${encodeURIComponent(p)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random()*1000)}`;
+
+    const img = new Image();
+
+    img.src = url;
+
+    img.onload = () => {
+
+      ld.classList.remove('loading');
+
+      ld.innerHTML = `
+        <img src="${url}" style="width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.1)">
+        <p style="font-size:.7rem;opacity:.6;margin-top:5px">
+          ✨ ${p}
+        </p>
+      `;
+
+    };
+
+    img.onerror = () => {
+
+      ld.innerHTML = '❌ Erreur génération image.';
+
+    };
+
+    aiIsLoading = false;
+
+    return;
+
+  }
+
+  addAmsg('user', txt);
+
+  inp.value = '';
+
+  aiIsLoading = true;
+
+  const ld = addAmsg(
+    'ai loading',
+    '<div class="spinner"></div>'
+  );
+
+  try {
+
+    const modelId =
+      document.getElementById('aiModel').value;
+
+    const contents = [
+
+      ...aiHist,
+
+      {
+        role: "user",
+        parts: [
+          {
+            text: txt
+          }
+        ]
+      }
+
+    ];
+
+    const response = await fetch('/api/chat', {
+
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+      body: JSON.stringify({
+        model: modelId,
+        contents: contents
+      })
+
+    });
+
+    const data = await response.json();
+
+    if (
+      data.candidates &&
+      data.candidates[0].content
+    ) {
+
+      const aiText =
+        data.candidates[0]
+        .content.parts[0].text;
+
+      aiHist.push({
+        role: "user",
+        parts: [{ text: txt }]
+      });
+
+      aiHist.push({
+        role: "model",
+        parts: [{ text: aiText }]
+      });
+
+      ld.classList.remove('loading');
+
+      ld.innerHTML =
+        aiText
+        .replace(/\*\*(.*?)\*\*/g,
+          '<strong>$1</strong>')
+        .replace(/\n/g, '<br>')
+        .replace(/`([^`]+)`/g,
+          '<code style="background:rgba(0,0,0,0.3);padding:2px 4px;border-radius:4px">$1</code>');
+
+    } else {
+
+      throw new Error(
+        data.error?.message ||
+        "Réponse vide"
+      );
+
+    }
+
+  } catch (e) {
+
+    ld.classList.remove('loading');
+
+    ld.innerHTML =
+      `<span style="color:#ff6b6b">
+        ❌ ${e.message}
+      </span>`;
+
+  }
+
+  finally {
+
+    aiIsLoading = false;
+
+    const cont =
+      document.getElementById('aiMsgs');
+
+    cont.scrollTop =
+      cont.scrollHeight;
+
+  }
+
+}
+
+function addAmsg(role, content) {
+
+  const cont =
+    document.getElementById('aiMsgs');
+
+  const div =
+    document.createElement('div');
+
+  div.className = `amsg ${role}`;
+
+  div.innerHTML = content;
+
+  cont.appendChild(div);
+
+  cont.scrollTop =
+    cont.scrollHeight;
+
+  return div;
+
+}
+
+function aiPre(t) {
+
+  document.getElementById('aiIn').value = t;
+
+  document.getElementById('aiIn').focus();
+
+}
+
+function aiKd(e) {
+
+  if (
+    e.key === 'Enter' &&
+    !e.shiftKey
+  ) {
+
+    e.preventDefault();
+
+    aiSend();
+
+  }
+
+}
 // ============ PALETTE ============
 let ptool='pen',pdown=false,pstart=null,psnap=null;
 let pcolor='#4f96ff',psize=8,popacityV=1;
