@@ -1609,6 +1609,77 @@ async function aiSend() {
 
 }
 
+async function fetchGeminiModels() {
+
+  const select =
+    document.getElementById('aiModel');
+
+  select.innerHTML =
+    '<option>Chargement...</option>';
+
+  try {
+
+    const resp =
+      await fetch('/api/models');
+
+    const data =
+      await resp.json();
+
+    if (data.models) {
+
+      select.innerHTML = '';
+
+      const valid =
+        data.models.filter(m =>
+
+          m.supportedGenerationMethods &&
+          m.supportedGenerationMethods.includes("generateContent") &&
+          !m.name.includes("vision")
+
+        );
+
+      valid.forEach(m => {
+
+        const opt =
+          document.createElement('option');
+
+        opt.value =
+          m.name;
+
+        opt.innerText =
+          m.displayName || m.name;
+
+        select.appendChild(opt);
+
+      });
+
+      const flash =
+        [...select.options]
+        .find(o =>
+          o.value.includes('1.5-flash')
+        );
+
+      if (flash)
+        flash.selected = true;
+
+      toast("Modèles synchronisés !");
+
+    }
+
+  } catch (e) {
+
+    console.error(e);
+
+    select.innerHTML = `
+      <option value="models/gemini-1.5-flash">
+        Gemini Flash
+      </option>
+    `;
+
+  }
+
+}
+
 function addAmsg(role, content) {
 
   const cont =
