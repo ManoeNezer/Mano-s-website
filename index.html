@@ -605,6 +605,162 @@ canvas#wpmC{display:block;width:100%;height:72px;}
    BREAKOUT
    =========================== */
 #breakCanvas{border-radius:14px;display:block;}
+
+/* ===========================
+   BOTTOM NAV (mobile)
+   =========================== */
+.bottomnav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  height:68px;
+  z-index:1000;
+  border-radius:24px 24px 0 0;
+  border-bottom:none;
+  padding:0 8px;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-around;
+}
+.bnav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 12px;border-radius:16px;cursor:pointer;
+  color:rgba(255,255,255,0.42);
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  flex:1;
+}
+.bnav-item svg{width:20px;height:20px;transition:transform .3s;}
+.bnav-item span{font-size:.52rem;font-family:'DM Sans',sans-serif;font-weight:600;letter-spacing:.03em;white-space:nowrap;}
+.bnav-item.active{color:var(--accent);}
+.bnav-item.active svg{transform:scale(1.15);}
+
+/* ===========================
+   MOBILE OVERRIDES
+   =========================== */
+@media (max-width: 768px) {
+  html,body{overflow:hidden;}
+
+  /* Hide desktop sidebar, show bottom nav */
+  .sidebar{display:none!important;}
+  .bottomnav{display:flex!important;}
+
+  /* Topbar adjustments */
+  .topbar{top:12px;right:12px;gap:6px;}
+  #clock{padding:7px 12px;font-size:.7rem;}
+  .iBtn{width:34px;height:34px;}
+  .iBtn svg{width:15px;height:15px;}
+
+  /* Views take full width, leave room for topbar and bottom nav */
+  .view{
+    left:0!important;
+    top:0!important;
+    right:0!important;
+    bottom:68px!important;
+    padding:70px 14px 14px!important;
+  }
+
+  /* HOME */
+  .hero-title{font-size:clamp(2.8rem,15vw,5rem)!important;}
+  .badge{font-size:.55rem;}
+  .cards{flex-direction:column;gap:10px;margin-top:20px;}
+  .card{min-width:unset;padding:18px 16px;}
+
+  /* STUDIO */
+  .eshell{height:calc(100vh - 68px - 70px)!important;border-radius:18px;}
+  .toolbar{padding:10px 14px;flex-wrap:wrap;gap:6px;}
+  .tbar-actions{gap:4px;flex-wrap:wrap;}
+  .btn{padding:6px 10px;font-size:.68rem;}
+  .ntabs{padding:8px 12px 0;gap:2px;overflow-x:auto;}
+  .ntab{padding:6px 12px;font-size:.72rem;white-space:nowrap;}
+  #mainEditor{font-size:.92rem;padding:14px;}
+
+  /* MATH — stack vertically */
+  .calc-wrap{
+    grid-template-columns:1fr!important;
+    height:auto!important;
+    overflow-y:auto;
+    gap:10px;
+  }
+  .cleft{padding:12px;}
+  .cdisp{padding:12px 14px;}
+  .cres{font-size:1.6rem!important;}
+  .cbtn{padding:10px 2px;font-size:.7rem;}
+  .cbgrid{grid-template-columns:repeat(5,1fr);}
+  .cright{height:300px;flex-shrink:0;}
+  .plot-shell{height:200px!important;flex:none!important;}
+  .chist{display:none!important;}
+  .fml-panel{height:160px!important;}
+
+  /* TYPING */
+  .tshell{height:calc(100vh - 68px - 80px)!important;gap:8px;}
+  .tfield{font-size:1.1rem!important;padding:18px 20px!important;}
+  .tstats{gap:6px;}
+  .sbox{padding:10px 12px!important;}
+  .sval{font-size:1.1rem!important;}
+
+  /* AI CHAT */
+  .aishell{height:calc(100vh - 68px - 80px)!important;gap:8px;}
+
+  /* AI head: model select + refresh on same line as title */
+  .aihead{flex-wrap:wrap;gap:8px;}
+  .aihead>div:nth-child(2){flex:1;min-width:0;}
+  #aiModel{font-size:.7rem;padding:5px 8px;max-width:180px;}
+  .aihead .btn{padding:6px 8px;min-width:32px;display:flex;align-items:center;justify-content:center;}
+
+  .aipresets{gap:4px;}
+  .apre{padding:4px 10px;font-size:.65rem;}
+  .amsg{max-width:88%!important;padding:10px 14px!important;font-size:.85rem!important;}
+  .airow{gap:6px;}
+  .aita{padding:10px 14px;font-size:.85rem;}
+  .asend{width:40px;height:40px;}
+
+  /* PALETTE */
+  .palshell{height:calc(100vh - 68px - 80px)!important;gap:8px;}
+  .paltop{flex-direction:column!important;gap:8px;}
+  .palview{height:220px!important;flex:none!important;}
+  .palside{padding:12px;gap:8px;overflow-y:auto;max-height:none;}
+  .palbtns{gap:4px;}
+  .palbtns .btn{padding:6px 8px;font-size:.68rem;}
+  #palCanvas{height:220px!important;}
+
+  /* MARKDOWN */
+  .mdshell{flex-direction:column!important;height:calc(100vh - 68px - 80px)!important;gap:8px;}
+  .mdleft,.mdright{flex:1;min-height:0;}
+  #mdInput{font-size:.82rem;padding:14px;}
+  .mdprev{padding:14px;font-size:.88rem;}
+
+  /* ARCADE */
+  .gamehub{height:calc(100vh - 68px - 80px)!important;}
+  .game-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))!important;}
+
+  /* THEME PANEL */
+  .tpanel{width:calc(100vw - 32px)!important;padding:24px 18px;border-radius:28px;}
+  .tgrid{grid-template-columns:1fr 1fr!important;}
+
+  /* Toast above bottom nav */
+  #toast{bottom:80px!important;}
+
+  /* Scroll views */
+  .view .scroll{overflow-y:auto!important;}
+
+  /* Canvas games scale */
+  #snakeCanvas,#tetrisCanvas,#pongCanvas,#siCanvas,#pacCanvas,#breakCanvas{max-width:100%!important;}
+  .tetris-wrap{flex-direction:column!important;align-items:center!important;}
+
+  /* Memory board */
+  .ms-board{max-width:100%;}
+  .ms-cell{width:28px!important;height:28px!important;font-size:.7rem!important;}
+
+  /* 2048 */
+  .boardEl-inner div{width:65px!important;height:65px!important;}
+}
+
+@media (max-width: 400px) {
+  .hero-title{font-size:clamp(2.2rem,13vw,3.5rem)!important;}
+  .bnav-item span{display:none;}
+  .bnav-item{padding:8px 6px;}
+  .tgrid{grid-template-columns:1fr!important;}
+  #aiModel{max-width:140px;}
+}
 </style>
 </head>
 <body class="t-alpine">
@@ -615,16 +771,34 @@ canvas#wpmC{display:block;width:100%;height:72px;}
 
 <!-- SIDEBAR -->
 <nav class="glass sidebar">
-  <div class="sicon active" onclick="nav('home',this)"><i data-lucide="layout-grid"></i><span class="tip">Accueil</span></div>
-  <div class="sicon" onclick="nav('studio',this)"><i data-lucide="file-code"></i><span class="tip">Studio .nezer</span></div>
-  <div class="sicon" onclick="nav('math',this)"><i data-lucide="variable"></i><span class="tip">Math Engine</span></div>
-  <div class="sicon" onclick="nav('typing',this)"><i data-lucide="keyboard"></i><span class="tip">Nezer Type</span></div>
+  <div class="sicon active" onclick="nav('home',this);setBnav('bn-home')"><i data-lucide="layout-grid"></i><span class="tip">Accueil</span></div>
+  <div class="sicon" onclick="nav('studio',this);setBnav('bn-studio')"><i data-lucide="file-code"></i><span class="tip">Studio .nezer</span></div>
+  <div class="sicon" onclick="nav('math',this);setBnav('bn-math')"><i data-lucide="variable"></i><span class="tip">Math Engine</span></div>
+  <div class="sicon" onclick="nav('typing',this);setBnav('bn-typing')"><i data-lucide="keyboard"></i><span class="tip">Nezer Type</span></div>
   <div class="sep"></div>
-  <div class="sicon" onclick="nav('ai',this)"><i data-lucide="sparkles"></i><span class="tip">Nezer AI</span></div>
-  <div class="sicon" onclick="nav('palette',this)"><i data-lucide="palette"></i><span class="tip">Studio Couleurs</span></div>
-  <div class="sicon" onclick="nav('markdown',this)"><i data-lucide="file-text"></i><span class="tip">Markdown Live</span></div>
+  <div class="sicon" onclick="nav('ai',this);setBnav('bn-ai')"><i data-lucide="sparkles"></i><span class="tip">Nezer AI</span></div>
+  <div class="sicon" onclick="nav('palette',this);setBnav('bn-more')"><i data-lucide="palette"></i><span class="tip">Studio Couleurs</span></div>
+  <div class="sicon" onclick="nav('markdown',this);setBnav('bn-more')"><i data-lucide="file-text"></i><span class="tip">Markdown Live</span></div>
 </nav>
 
+<!-- BOTTOM NAV (mobile) -->
+<nav class="glass bottomnav" id="bottomNav">
+  <div class="bnav-item active" id="bn-home" onclick="nav('home',this);setBnav('bn-home')"><i data-lucide="layout-grid"></i><span>Accueil</span></div>
+  <div class="bnav-item" id="bn-studio" onclick="nav('studio',this);setBnav('bn-studio')"><i data-lucide="file-code"></i><span>Studio</span></div>
+  <div class="bnav-item" id="bn-math" onclick="nav('math',this);setBnav('bn-math')"><i data-lucide="variable"></i><span>Maths</span></div>
+  <div class="bnav-item" id="bn-typing" onclick="nav('typing',this);setBnav('bn-typing')"><i data-lucide="keyboard"></i><span>Type</span></div>
+  <div class="bnav-item" id="bn-ai" onclick="nav('ai',this);setBnav('bn-ai')"><i data-lucide="sparkles"></i><span>IA</span></div>
+  <div class="bnav-item" id="bn-more" onclick="toggleMobileMore()"><i data-lucide="grid-3x3"></i><span>Plus</span></div>
+</nav>
+<!-- MOBILE MORE MENU -->
+<div id="mobileMore" style="display:none;position:fixed;bottom:76px;left:12px;right:12px;z-index:1100;padding:16px;border-radius:24px;" class="glass">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:16px;cursor:pointer;color:rgba(255,255,255,0.7)" onclick="nav('palette',null);setBnav('bn-more');closeMobileMore()"><i data-lucide="palette" style="width:22px;height:22px"></i><span style="font-size:.62rem;font-family:'DM Sans',sans-serif">Couleurs</span></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:16px;cursor:pointer;color:rgba(255,255,255,0.7)" onclick="nav('markdown',null);setBnav('bn-more');closeMobileMore()"><i data-lucide="file-text" style="width:22px;height:22px"></i><span style="font-size:.62rem;font-family:'DM Sans',sans-serif">Markdown</span></div>
+    <div id="bn-arcade-m" style="display:none;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:16px;cursor:pointer;color:rgba(255,255,255,0.7)" onclick="nav('arcade',null);setBnav('bn-more');closeMobileMore()"><i data-lucide="gamepad-2" style="width:22px;height:22px"></i><span style="font-size:.62rem;font-family:'DM Sans',sans-serif">Arcade</span></div>
+  </div>
+  <button style="margin-top:10px;width:100%;background:transparent;border:none;color:var(--text-dim);cursor:pointer;font-size:.75rem;padding:4px;" onclick="closeMobileMore()">✕ Fermer</button>
+</div>
 <!-- TOPBAR: all buttons top right, settings stays -->
 <div class="topbar">
   <div id="clock" class="gpill glass" style="padding:9px 18px;font-family:'Space Mono',monospace;font-size:.78rem;font-weight:700;letter-spacing:.06em;"></div>
@@ -667,12 +841,12 @@ canvas#wpmC{display:block;width:100%;height:72px;}
       <h1 class="hero-title">NATIVE<br>STATION</h1>
       <p style="font-size:1.05rem;color:var(--text-dim);margin-top:18px;max-width:460px;line-height:1.65;letter-spacing:-.01em">Ton espace créatif tout-en-un. Code, math, design, IA — <em style="color:var(--accent);font-style:normal;font-weight:600">tout en un seul fichier.</em></p>
       <div class="cards">
-        <div class="glass card" style="animation-delay:.08s" onclick="nav('studio',document.querySelectorAll('.sicon')[1])"><i data-lucide="file-code" style="color:var(--accent)"></i><h4>Studio .nezer</h4><p>Format universel multimédia</p></div>
-        <div class="glass card" style="animation-delay:.16s" onclick="nav('math',document.querySelectorAll('.sicon')[2])"><i data-lucide="function-square" style="color:#a78bfa"></i><h4>Math Engine</h4><p>Bac+5 · Formules · Traceur</p></div>
-        <div class="glass card" style="animation-delay:.24s" onclick="nav('typing',document.querySelectorAll('.sicon')[3])"><i data-lucide="keyboard" style="color:#34d399"></i><h4>Nezer Type</h4><p>Entraînement · Stats live</p></div>
-        <div class="glass card" style="animation-delay:.32s" onclick="nav('ai',document.querySelectorAll('.sicon')[5])"><i data-lucide="sparkles" style="color:#f59e0b"></i><h4>Nezer AI</h4><p>Assistant Gemini intégré</p></div>
-        <div class="glass card" style="animation-delay:.40s" onclick="nav('palette',document.querySelectorAll('.sicon')[6])"><i data-lucide="palette" style="color:#f472b6"></i><h4>Studio Couleurs</h4><p>Dessin · Palettes · Export</p></div>
-        <div class="glass card" style="animation-delay:.48s" onclick="nav('markdown',document.querySelectorAll('.sicon')[7])"><i data-lucide="file-text" style="color:#60a5fa"></i><h4>Markdown Live</h4><p>Éditeur avec prévisualisation</p></div>
+        <div class="glass card" style="animation-delay:.08s" onclick="nav('studio',null);setBnav('bn-studio')"><i data-lucide="file-code" style="color:var(--accent)"></i><h4>Studio .nezer</h4><p>Format universel multimédia</p></div>
+        <div class="glass card" style="animation-delay:.16s" onclick="nav('math',null);setBnav('bn-math')"><i data-lucide="function-square" style="color:#a78bfa"></i><h4>Math Engine</h4><p>Bac+5 · Formules · Traceur</p></div>
+        <div class="glass card" style="animation-delay:.24s" onclick="nav('typing',null);setBnav('bn-typing')"><i data-lucide="keyboard" style="color:#34d399"></i><h4>Nezer Type</h4><p>Entraînement · Stats live</p></div>
+        <div class="glass card" style="animation-delay:.32s" onclick="nav('ai',null);setBnav('bn-ai')"><i data-lucide="sparkles" style="color:#f59e0b"></i><h4>Nezer AI</h4><p>Assistant Gemini intégré</p></div>
+        <div class="glass card" style="animation-delay:.40s" onclick="nav('palette',null);setBnav('bn-more')"><i data-lucide="palette" style="color:#f472b6"></i><h4>Studio Couleurs</h4><p>Dessin · Palettes · Export</p></div>
+        <div class="glass card" style="animation-delay:.48s" onclick="nav('markdown',null);setBnav('bn-more')"><i data-lucide="file-text" style="color:#60a5fa"></i><h4>Markdown Live</h4><p>Éditeur avec prévisualisation</p></div>
       </div>
     </div>
   </div>
@@ -802,18 +976,20 @@ canvas#wpmC{display:block;width:100%;height:72px;}
 <!-- ====== AI ====== -->
 <main id="ai" class="view">
   <div class="aishell">
-    <div class="aihead">
+    <div class="aihead" style="flex-wrap:wrap;gap:8px;align-items:center;">
       <div class="aiicon"><i data-lucide="sparkles"></i></div>
-      <div style="flex:1">
-        <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700">Nezer AI</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;white-space:nowrap">Nezer AI</h3>
+          <select id="aiModel" class="ai-select">
+            <option value="models/gemini-1.5-flash">Gemini 1.5 Flash (Rapide)</option>
+            <option value="models/gemini-1.5-pro">Gemini 1.5 Pro (Puissant)</option>
+            <option value="models/gemini-pro">Gemini 1.0 Pro</option>
+          </select>
+          <button class="btn" onclick="fetchGeminiModels()" title="Actualiser" style="padding:6px 8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i></button>
+        </div>
         <p style="font-size:.72rem;color:var(--text-dim)">Propulsé par Google Gemini</p>
       </div>
-      <select id="aiModel" class="ai-select">
-        <option value="models/gemini-1.5-flash">Gemini 1.5 Flash (Rapide)</option>
-        <option value="models/gemini-1.5-pro">Gemini 1.5 Pro (Puissant)</option>
-        <option value="models/gemini-pro">Gemini 1.0 Pro</option>
-      </select>
-      <button class="btn" onclick="fetchGeminiModels()" title="Actualiser"><i data-lucide="refresh-cw" style="width:14px"></i></button>
     </div>
     <div class="aipresets">
       <div class="apre" onclick="aiPre('Génère une idée de projet créatif')">💡 Idée projet</div>
@@ -932,6 +1108,29 @@ function nav(id,el){
 }
 setTimeout(()=>{document.getElementById('home').classList.add('in');},80);
 
+// ============ BOTTOM NAV (mobile) ============
+const BNAV_MAP={'home':'bn-home','studio':'bn-studio','math':'bn-math','typing':'bn-typing','ai':'bn-ai','palette':'bn-more','markdown':'bn-more','arcade':'bn-more'};
+function setBnav(activeId){
+  document.querySelectorAll('.bnav-item').forEach(i=>i.classList.remove('active'));
+  const el=document.getElementById(activeId);
+  if(el)el.classList.add('active');
+}
+function toggleMobileMore(){
+  const m=document.getElementById('mobileMore');
+  m.style.display=m.style.display==='none'||!m.style.display?'block':'none';
+}
+function closeMobileMore(){document.getElementById('mobileMore').style.display='none';}
+// Close more menu when tapping outside
+document.addEventListener('click',e=>{
+  const m=document.getElementById('mobileMore');
+  const bn=document.getElementById('bn-more');
+  if(m&&m.style.display==='block'&&!m.contains(e.target)&&e.target!==bn&&!bn.contains(e.target)){
+    closeMobileMore();
+  }
+});
+// Patch showArcadeInSidebar to also show in mobile more menu
+const _origShowArcade = typeof showArcadeInSidebar !== 'undefined' ? showArcadeInSidebar : null;
+
 // ============ THEMES ============
 function openTheme(){document.getElementById('themeMenu').classList.add('open');}
 function closeTheme(){document.getElementById('themeMenu').classList.remove('open');}
@@ -956,6 +1155,7 @@ function unlockArcade(){
   nav('arcade',null);
 }
 function showArcadeInSidebar(){
+  const mArcade=document.getElementById('bn-arcade-m');if(mArcade)mArcade.style.display='flex';
   if(document.getElementById('arcadeNavBtn'))return;
   const sidebar=document.querySelector('.sidebar');
   const sep=document.createElement('div');sep.className='sep';
